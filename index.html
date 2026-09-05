@@ -10,6 +10,12 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            
+            /* COMPLETELY BLOCKS ALL TEXT SELECTION ACROSS THE ENTIRE WEBSITE */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -228,7 +234,7 @@
             </div>
         </section>
         <section>
-          <h2>TECHNICAL SKILLS</h2>
+            <h2>TECHNICAL SKILLS</h2>
             <div class="skills-grid">
                 <div class="skill-category">
                     <div class="skill-category-title">* Machine Learning & AI:</div>
@@ -261,7 +267,7 @@
             <h2>PROJECTS</h2>
             <div class="project-header">
                 <div class="project-title">1. Multi-User Cloud Storage Platform</div>
-                <a href="www.shreearangrej.pythonanywhere.com" target="_blank" class="project-link">www.shreearangrej.pythonanywhere.com</a>
+                <a href="https://shreearangrej.pythonanywhere.com" target="_blank" class="project-link">shreearangrej.pythonanywhere.com</a>
             </div>
             <ul>
                 <li>Architected and deployed a custom, cloud-based storage system utilizing Flask for backend logic and HTML/CSS/JS for the user interface (The UI is not yet responsive).</li>
@@ -282,10 +288,8 @@
                 <li>Transitioned from local development environments to live web deployments upon starting the CSE degree program.</li>
             </ul>
         </section>
-
     </main>
 
-    <script src="https://cloudflare.com"></script>
     <script>
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
@@ -294,11 +298,11 @@
         let height = canvas.height = window.innerHeight;
 
         const particles = [];
-
-        const FIELD_RADIUS = 300;
-        const GRAVITY_CONSTANT = 12.0;
-        const MIN_DISTANCE = 16;
-        const MAX_VELOCITY = 15;
+        
+        const FIELD_RADIUS = 300;       
+        const GRAVITY_CONSTANT = 12.0;  
+        const MIN_DISTANCE = 16;        
+        const MAX_VELOCITY = 15;        
 
         class QuantumParticle {
             constructor(x, y) {
@@ -311,10 +315,10 @@
                 this.originalSize = Math.random() * 12 + 4;
                 this.size = this.originalSize;
                 this.life = 1.0;
-                this.decay = Math.random() * 0.0004 + 0.0002;
+                this.decay = Math.random() * 0.0004 + 0.0002; 
                 
                 this.charge = Math.random() > 0.5 ? 1 : -1;
-                this.hue = this.charge === 1 ? 0 : 215;
+                this.hue = this.charge === 1 ? 0 : 215; 
             }
 
             get mass() {
@@ -365,9 +369,7 @@
 
                     if (distance < FIELD_RADIUS) {
                         const clampDistance = Math.max(distance, MIN_DISTANCE);
-                        
                         const forceMagnitude = (GRAVITY_CONSTANT * p1.mass * p2.mass) / (clampDistance * clampDistance);
-                        
                         const pushDirection = p1.charge * p2.charge;
                         
                         const fx = (dx / clampDistance) * forceMagnitude * pushDirection;
@@ -402,28 +404,10 @@
             particles.push(new QuantumParticle(clientX, clientY));
         }
 
-        function handleInput(e, isTouch) {
-            let x, y;
-            if (isTouch) {
-                if (e.touches && e.touches.length > 0) {
-                    x = e.touches[0].clientX;
-                    y = e.touches[0].clientY;
-                } else if (e.changedTouches && e.changedTouches.length > 0) {
-                    x = e.changedTouches[0].clientX;
-                    y = e.changedTouches[0].clientY;
-                } else {
-                    return;
-                }
-            } else {
-                x = e.clientX;
-                y = e.clientY;
-            }
-
-            spawnSingleParticle(x, y);
-        }
-
+        let lastInputTime = 0;
         window.addEventListener('click', (e) => {
-            handleInput(e, false);
+            if (Date.now() - lastInputTime < 400) return;
+            spawnSingleParticle(e.clientX, e.clientY);
         });
 
         let touchStartX = 0;
@@ -437,22 +421,21 @@
         }, { passive: true });
 
         window.addEventListener('touchend', (e) => {
-            if (e.target.tagName === 'A') return;
+            if (e.target.tagName === 'A') return; 
 
             if (e.changedTouches && e.changedTouches.length > 0) {
                 const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX);
                 const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
 
                 if (deltaX < 6 && deltaY < 6) {
-                    handleInput(e, true);
+                    lastInputTime = Date.now(); 
+                    spawnSingleParticle(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
                 }
             }
         }, { passive: true });
 
-
         function renderLoop() {
             ctx.clearRect(0, 0, width, height);
-
             resolveQuantumFields();
 
             for (let i = particles.length - 1; i >= 0; i--) {
@@ -465,7 +448,6 @@
                     p.draw();
                 }
             }
-
             requestAnimationFrame(renderLoop);
         }
 
@@ -476,6 +458,5 @@
             height = canvas.height = window.innerHeight;
         });
     </script>
-
 </body>
 </html>
