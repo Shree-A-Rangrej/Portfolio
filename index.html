@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shree A Rangrej | Developer Portfolio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 4rem 2rem 2rem 2rem;
+            position: relative;
+        }
+
+        .profile-title {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-contact a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .meta-contact a:hover {
+            color: #a78bfa;
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        section {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color 0.3s ease;
+        }
+
+        section:hover {
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #f3f4f6;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #60a5fa;
+            padding-left: 0.75rem;
+        }
+
+        .objective-text, .experience-item p {
+            color: #d1d5db;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .skill-category {
+            background: rgba(255,255,255,0.02);
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .skill-category-title {
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-category-body {
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+
+        .project-header, .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-title, .experience-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f3f4f6;
+        }
+
+        .project-link {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .project-link:hover {
+            text-decoration: underline;
+        }
+
+        .timeline-date {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        ul li::before {
+            content: "•";
+            color: #60a5fa;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -0.2rem;
+        }
+
+        .no-bullet li::before {
+            display: none;
+        }
+        .no-bullet li {
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <header>
+        <h1 class="profile-title">SHREE A RANGREJ</h1>
+        <div class="meta-contact">
+            <span>Ballari, Karnataka</span>
+            <span>|</span>
+            <span>+91 8105430325</span>
+            <span>|</span>
+            <span><a href="mailto:shreear0000@gmail.com">shreear0000@gmail.com</a></span>
+            <span>|</span>
+            <span>GitHub: <a href="https://github.com/Shree-A-Rangrej" target="_blank">https://github.com/Shree-A-Rangrej</a></span>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>OBJECTIVE</h2>
+            <p class="objective-text">Highly motivated Computer Science and Engineering (CSE) 1st-year student with 6-7 years of self-taught programming experience. Seeking a Software Engineering, Backend, or AI/ML-focused Internship to leverage technical skills in Python, Flask, PyTorch, and JAX to build scalable applications and data models.</p>
+        </section>
+
+        <section>
+            <h2>EDUCATION</h2>
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">B.Tech in Computer Science & Engineering</div>
+                    <div class="objective-text">Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari</div>
+                </div>
+                <div class="timeline-date">Expected Graduation: May 2030</div>
+            </div>
+        </section>
+        <section>
+          <h2>TECHNICAL SKILLS</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <div class="skill-category-title">* Machine Learning & AI:</div>
+                    <div class="skill-category-body">NumPy, PyTorch, JAX, Flax, Matplotlib, Scikit-Learn (Basic)</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">* Backend & Networking:</div>
+                    <div class="skill-category-body">Python, Flask Framework, Socket Programming</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">* Frontend & Graphics:</div>
+                    <div class="skill-category-body">HTML, CSS, JavaScript, Frontend Design, Three.js</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">* Game & App Development:</div>
+                    <div class="skill-category-body">Godot Engine, Pygame, Kivy Framework</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">* Tools & Cloud Deployment:</div>
+                    <div class="skill-category-body">PythonAnywhere, Git/GitHub, VS Code</div>
+                </div>
+                <div class="skill-category">
+                    <div class="skill-category-title">* Core Interests:</div>
+                    <div class="skill-category-body">Computational Mathematics, Physics Simulations, Game Architecture</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>PROJECTS</h2>
+            <div class="project-header">
+                <div class="project-title">1. Multi-User Cloud Storage Platform</div>
+                <a href="www.shreearangrej.pythonanywhere.com" target="_blank" class="project-link">www.shreearangrej.pythonanywhere.com</a>
+            </div>
+            <ul>
+                <li>Architected and deployed a custom, cloud-based storage system utilizing Flask for backend logic and HTML/CSS/JS for the user interface (The UI is not yet responsive).</li>
+                <li>Engineered secure backend file-handling mechanisms to facilitate user uploads, data organization, and cloud hosting workflows.</li>
+                <li>Managed independent deployment and production configurations on the PythonAnywhere cloud hosting platform.</li>
+                <li>Established this application as the foundational launch of a public project tracking and code documentation showcase.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>ADDITIONAL EXPERIENCE</h2>
+            <div class="experience-header">
+                <div class="experience-title">Independent Software & AI Learner</div>
+                <div class="timeline-date">2019 – Present</div>
+            </div>
+            <ul>
+                <li>Dedicated 6-7 years to self-directed learning, mastering core programming workflows, network socket routing, data analysis, and machine learning fundamentals prior to university enrollment.</li>
+                <li>Transitioned from local development environments to live web deployments upon starting the CSE degree program.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script src="https://cloudflare.com"></script>
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const particles = [];
+
+        const FIELD_RADIUS = 300;
+        const GRAVITY_CONSTANT = 12.0;
+        const MIN_DISTANCE = 16;
+        const MAX_VELOCITY = 15;
+
+        class QuantumParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                
+                this.originalSize = Math.random() * 12 + 4;
+                this.size = this.originalSize;
+                this.life = 1.0;
+                this.decay = Math.random() * 0.0004 + 0.0002;
+                
+                this.charge = Math.random() > 0.5 ? 1 : -1;
+                this.hue = this.charge === 1 ? 0 : 215;
+            }
+
+            get mass() {
+                return this.size;
+            }
+
+            update() {
+                const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                if (speed > MAX_VELOCITY) {
+                    this.vx = (this.vx / speed) * MAX_VELOCITY;
+                    this.vy = (this.vy / speed) * MAX_VELOCITY;
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+                
+                this.size = this.originalSize * this.life;
+                
+                this.vx *= 0.995;
+                this.vy *= 0.995;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                
+                ctx.fillStyle = `hsla(${this.hue}, 95%, 60%, 1.0)`;
+                ctx.shadowBlur = this.size * 2.8;
+                ctx.shadowColor = `hsla(${this.hue}, 95%, 60%, 1.0)`;
+                
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function resolveQuantumFields() {
+            for (let i = 0; i < particles.length; i++) {
+                const p1 = particles[i];
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < FIELD_RADIUS) {
+                        const clampDistance = Math.max(distance, MIN_DISTANCE);
+                        
+                        const forceMagnitude = (GRAVITY_CONSTANT * p1.mass * p2.mass) / (clampDistance * clampDistance);
+                        
+                        const pushDirection = p1.charge * p2.charge;
+                        
+                        const fx = (dx / clampDistance) * forceMagnitude * pushDirection;
+                        const fy = (dy / clampDistance) * forceMagnitude * pushDirection;
+
+                        p1.vx -= fx / p1.mass;
+                        p1.vy -= fy / p1.mass;
+                        p2.vx += fx / p2.mass;
+                        p2.vy += fy / p2.mass;
+
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        
+                        const lineAlpha = Math.max(0, (FIELD_RADIUS - distance) / FIELD_RADIUS) * 0.6;
+                        
+                        if (pushDirection < 0) {
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
+                        } else {
+                            const lineHue = p1.charge === 1 ? '239, 68, 68' : '59, 130, 246';
+                            ctx.strokeStyle = `rgba(${lineHue}, ${lineAlpha * 0.5})`;
+                        }
+                        
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function spawnSingleParticle(clientX, clientY) {
+            particles.push(new QuantumParticle(clientX, clientY));
+        }
+
+        function handleInput(e, isTouch) {
+            let x, y;
+            if (isTouch) {
+                if (e.touches && e.touches.length > 0) {
+                    x = e.touches[0].clientX;
+                    y = e.touches[0].clientY;
+                } else if (e.changedTouches && e.changedTouches.length > 0) {
+                    x = e.changedTouches[0].clientX;
+                    y = e.changedTouches[0].clientY;
+                } else {
+                    return;
+                }
+            } else {
+                x = e.clientX;
+                y = e.clientY;
+            }
+
+            spawnSingleParticle(x, y);
+        }
+
+        window.addEventListener('click', (e) => {
+            handleInput(e, false);
+        });
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.target.tagName !== 'A') {
+                e.preventDefault(); 
+                handleInput(e, true);
+            }
+        }, { passive: false });
+
+        function renderLoop() {
+            ctx.clearRect(0, 0, width, height);
+
+            resolveQuantumFields();
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                
+                if (p.life <= 0 || p.size <= 0.1) {
+                    particles.splice(i, 1);
+                } else {
+                    p.draw();
+                }
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        renderLoop();
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
