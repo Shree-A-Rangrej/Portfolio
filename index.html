@@ -25,11 +25,11 @@
         }
 
         #bg-canvas {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            min-height: 100%;
             z-index: -1;
             pointer-events: none;
         }
@@ -290,173 +290,207 @@
         </section>
     </main>
 
-    <script>
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
+<script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+    // Global width and height dimensions mapping to full scroll bounds
+    let width, height;
 
-        const particles = [];
-        
-        const FIELD_RADIUS = 300;       
-        const GRAVITY_CONSTANT = 12.0;  
-        const MIN_DISTANCE = 16;        
-        const MAX_VELOCITY = 15;        
+    function resizeCanvasToTotalContent() {
+        // Grab the exact total scrollable dimensions of the page content
+        width = Math.max(
+            document.body.scrollWidth, 
+            document.documentElement.scrollWidth
+        );
+        height = Math.max(
+            document.body.scrollHeight, 
+            document.documentElement.scrollHeight
+        );
 
-        class QuantumParticle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                
-                this.vx = (Math.random() - 0.5) * 1.5;
-                this.vy = (Math.random() - 0.5) * 1.5;
-                
-                this.originalSize = Math.random() * 12 + 4;
-                this.size = this.originalSize;
-                this.life = 1.0;
-                this.decay = Math.random() * 0.0004 + 0.0002; 
-                
-                this.charge = Math.random() > 0.5 ? 1 : -1;
-                this.hue = this.charge === 1 ? 0 : 215; 
-            }
+        // Update canvas display size via styles
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
 
-            get mass() {
-                return this.size;
-            }
+        // Update internal canvas drawing resolution buffer to prevent blurring
+        canvas.width = width;
+        canvas.height = height;
+    }
 
-            update() {
-                const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-                if (speed > MAX_VELOCITY) {
-                    this.vx = (this.vx / speed) * MAX_VELOCITY;
-                    this.vy = (this.vy / speed) * MAX_VELOCITY;
-                }
+    // Initialize dimensions right away
+    resizeCanvasToTotalContent();
 
-                this.x += this.vx;
-                this.y += this.vy;
-                this.life -= this.decay;
-                
-                this.size = this.originalSize * this.life;
-                
-                this.vx *= 0.995;
-                this.vy *= 0.995;
-            }
+    const particles = [];
+    
+    const FIELD_RADIUS = 300;       
+    const GRAVITY_CONSTANT = 12.0;  
+    const MIN_DISTANCE = 16;        
+    const MAX_VELOCITY = 15;        
 
-            draw() {
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                
-                ctx.fillStyle = `hsla(${this.hue}, 95%, 60%, 1.0)`;
-                ctx.shadowBlur = this.size * 2.8;
-                ctx.shadowColor = `hsla(${this.hue}, 95%, 60%, 1.0)`;
-                
-                ctx.fill();
-                ctx.restore();
-            }
+    class QuantumParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = (Math.random() - 0.5) * 1.5;
+            
+            this.originalSize = Math.random() * 12 + 4;
+            this.size = this.originalSize;
+            this.life = 1.0;
+            this.decay = Math.random() * 0.0004 + 0.0002; 
+            
+            this.charge = Math.random() > 0.5 ? 1 : -1;
+            this.hue = this.charge === 1 ? 0 : 215; 
         }
 
-        function resolveQuantumFields() {
-            for (let i = 0; i < particles.length; i++) {
-                const p1 = particles[i];
+        get mass() {
+            return this.size;
+        }
 
-                for (let j = i + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
+        update() {
+            const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+            if (speed > MAX_VELOCITY) {
+                this.vx = (this.vx / speed) * MAX_VELOCITY;
+                this.vy = (this.vy / speed) * MAX_VELOCITY;
+            }
 
-                    const dx = p2.x - p1.x;
-                    const dy = p2.y - p1.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life -= this.decay;
+            
+            this.size = this.originalSize * this.life;
+            
+            this.vx *= 0.995;
+            this.vy *= 0.995;
+        }
 
-                    if (distance < FIELD_RADIUS) {
-                        const clampDistance = Math.max(distance, MIN_DISTANCE);
-                        const forceMagnitude = (GRAVITY_CONSTANT * p1.mass * p2.mass) / (clampDistance * clampDistance);
-                        const pushDirection = p1.charge * p2.charge;
-                        
-                        const fx = (dx / clampDistance) * forceMagnitude * pushDirection;
-                        const fy = (dy / clampDistance) * forceMagnitude * pushDirection;
+        draw() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            
+            ctx.fillStyle = `hsla(${this.hue}, 95%, 60%, 1.0)`;
+            ctx.shadowBlur = this.size * 2.8;
+            ctx.shadowColor = `hsla(${this.hue}, 95%, 60%, 1.0)`;
+            
+            ctx.fill();
+            ctx.restore();
+        }
+    }
 
-                        p1.vx -= fx / p1.mass;
-                        p1.vy -= fy / p1.mass;
-                        p2.vx += fx / p2.mass;
-                        p2.vy += fy / p2.mass;
+    function resolveQuantumFields() {
+        for (let i = 0; i < particles.length; i++) {
+            const p1 = particles[i];
 
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        
-                        const lineAlpha = Math.max(0, (FIELD_RADIUS - distance) / FIELD_RADIUS) * 0.6;
-                        
-                        if (pushDirection < 0) {
-                            ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
-                        } else {
-                            const lineHue = p1.charge === 1 ? '239, 68, 68' : '59, 130, 246';
-                            ctx.strokeStyle = `rgba(${lineHue}, ${lineAlpha * 0.5})`;
-                        }
-                        
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
+            for (let j = i + 1; j < particles.length; j++) {
+                const p2 = particles[j];
+
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < FIELD_RADIUS) {
+                    const clampDistance = Math.max(distance, MIN_DISTANCE);
+                    const forceMagnitude = (GRAVITY_CONSTANT * p1.mass * p2.mass) / (clampDistance * clampDistance);
+                    const pushDirection = p1.charge * p2.charge;
+                    
+                    const fx = (dx / clampDistance) * forceMagnitude * pushDirection;
+                    const fy = (dy / clampDistance) * forceMagnitude * pushDirection;
+
+                    p1.vx -= fx / p1.mass;
+                    p1.vy -= fy / p1.mass;
+                    p2.vx += fx / p2.mass;
+                    p2.vy += fy / p2.mass;
+
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    
+                    const lineAlpha = Math.max(0, (FIELD_RADIUS - distance) / FIELD_RADIUS) * 0.6;
+                    
+                    if (pushDirection < 0) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
+                    } else {
+                        const lineHue = p1.charge === 1 ? '239, 68, 68' : '59, 130, 246';
+                        ctx.strokeStyle = `rgba(${lineHue}, ${lineAlpha * 0.5})`;
                     }
+                    
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
                 }
             }
         }
+    }
 
-        function spawnSingleParticle(clientX, clientY) {
-            particles.push(new QuantumParticle(clientX, clientY));
+    function spawnSingleParticle(absoluteX, absoluteY) {
+        particles.push(new QuantumParticle(absoluteX, absoluteY));
+    }
+
+    let lastInputTime = 0;
+    
+    // Fix click listener to use scroll metrics
+    window.addEventListener('click', (e) => {
+        if (Date.now() - lastInputTime < 400) return;
+        
+        const absoluteX = e.clientX + window.scrollX;
+        const absoluteY = e.clientY + window.scrollY;
+        spawnSingleParticle(absoluteX, absoluteY);
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    window.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
         }
+    }, { passive: true });
 
-        let lastInputTime = 0;
-        window.addEventListener('click', (e) => {
-            if (Date.now() - lastInputTime < 400) return;
-            spawnSingleParticle(e.clientX, e.clientY);
-        });
+    window.addEventListener('touchend', (e) => {
+      if (e.target.tagName === 'A') return; 
 
-        let touchStartX = 0;
-        let touchStartY = 0;
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX);
+        const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
 
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches && e.touches.length > 0) {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            }
-        }, { passive: true });
+        if (deltaX < 6 && deltaY < 6) {
+          lastInputTime = Date.now(); 
+        
+          const absoluteX = e.changedTouches[0].clientX + window.scrollX;
+          const absoluteY = e.changedTouches[0].clientY + window.scrollY;
 
-        window.addEventListener('touchend', (e) => {
-            if (e.target.tagName === 'A') return; 
-
-            if (e.changedTouches && e.changedTouches.length > 0) {
-                const deltaX = Math.abs(e.changedTouches[0].clientX - touchStartX);
-                const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
-
-                if (deltaX < 6 && deltaY < 6) {
-                    lastInputTime = Date.now(); 
-                    spawnSingleParticle(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-                }
-            }
-        }, { passive: true });
-
-        function renderLoop() {
-            ctx.clearRect(0, 0, width, height);
-            resolveQuantumFields();
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                
-                if (p.life <= 0 || p.size <= 0.1) {
-                    particles.splice(i, 1);
-                } else {
-                    p.draw();
-                }
-            }
-            requestAnimationFrame(renderLoop);
+          spawnSingleParticle(absoluteX, absoluteY);
         }
+      }
+    }, { passive: true });
 
-        renderLoop();
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-    </script>
+    function renderLoop() {
+        ctx.clearRect(0, 0, width, height);
+        resolveQuantumFields();
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.update();
+            
+            if (p.life <= 0 || p.size <= 0.1) {
+                particles.splice(i, 1);
+            } else {
+                p.draw();
+            }
+        }
+        requestAnimationFrame(renderLoop);
+    }
+
+    renderLoop();
+    
+    // Core structural recalculation events
+    window.addEventListener('DOMContentLoaded', resizeCanvasToTotalContent);
+    window.addEventListener('load', resizeCanvasToTotalContent);
+    window.addEventListener('resize', resizeCanvasToTotalContent);
+</script>
+
 </body>
 </html>
